@@ -28,7 +28,7 @@ Search any city for real-time weather and a 5-day forecast. Click one button, an
 - ⚡ Error handling for bad input, city-not-found, and network failures
 
 ## Project Structure
-
+```
 weather-agent/
 ├── app.py              # Flask routes + weather fetching
 ├── crew_setup.py       # CrewAI agent + task
@@ -39,8 +39,8 @@ weather-agent/
 ├── templates/
 │   └── index.html
 └── static/
-└── style.css
-
+    └── style.css
+```
 ## Setup
 
 ```bash

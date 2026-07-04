@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Weatherstation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="atmosphere">
+  <div class="isobars">
+    <svg viewBox="0 0 800 600" preserveAspectRatio="none">
+      <g class="isobar-group slow">
+        <path class="isobar-path" d="M-100,80 C150,40 300,120 500,70 S800,90 1000,60" />
+        <path class="isobar-path" d="M-100,150 C150,190 300,110 500,160 S800,130 1000,170" />
+      </g>
+      <g class="isobar-group">
+        <path class="isobar-path glow" d="M-100,260 C150,220 300,300 500,250 S800,270 1000,240" />
+        <path class="isobar-path" d="M-100,320 C150,360 300,290 500,330 S800,300 1000,340" />
+      </g>
+      <g class="isobar-group fast">
+        <path class="isobar-path" d="M-100,430 C150,470 300,400 500,440 S800,410 1000,450" />
+        <path class="isobar-path" d="M-100,500 C150,460 300,540 500,490 S800,510 1000,480" />
+      </g>
+    </svg>
+  </div>
+</div>
+
+<nav>
+  <div class="brand"><span class="dot"></span>Weatherstation</div>
+  <div class="nav-time" id="clock">--:--:--</div>
+</nav>
+
+<div class="page-flow">
+
+<section class="hero">
+  <form class="search" method="POST">
+    <input type="text" name="city" placeholder="Enter city, state, or country..." required>
+    <button type="submit">Scan</button>
+  </form>
+
+  {% if error %}
+    <p style="font-family: 'IBM Plex Mono', monospace; color: #ff8a4c; margin-top: 12px;">{{ error }}</p>
+  {% endif %}
+
+  {% if not weather %}
+  <div class="empty-wrap">
+    <div class="empty-left">
+      <svg class="empty-icon" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="30" cy="24" r="14" fill="none" stroke="var(--accent-warm)" stroke-width="1.5" opacity="0.6"/>
+        <path d="M20 42 Q20 30 32 30 Q34 24 42 24 Q52 24 53 33 Q60 33 60 40 Q60 46 53 46 L24 46 Q20 46 20 42 Z"
+              fill="none" stroke="var(--accent)" stroke-width="1.5" opacity="0.8"/>
+      </svg>
+      <h1 class="empty-title">Live weather, anywhere on Earth.</h1>
+      <p class="empty-subtitle">Search a city, state, or country to pull real-time conditions, a 5-day forecast, and an AI-generated summary sent straight to your inbox.</p>
+      <div class="empty-stats-row">
+        <div class="mini-stat"><div class="mini-stat-num">190+</div><div class="mini-stat-label">Countries Covered</div></div>
+        <div class="mini-stat"><div class="mini-stat-num">Live</div><div class="mini-stat-label">Real-Time Data</div></div>
+        <div class="mini-stat"><div class="mini-stat-num">AI</div><div class="mini-stat-label">Powered Summaries</div></div>
+      </div>
+    </div>
+    <div class="empty-right">
+      <div class="feature-card">
+        <div class="feature-num">01</div>
+        <div class="feature-text">
+          <div class="feature-title">Real-Time Conditions</div>
+          <div class="feature-desc">Temperature, humidity, wind, pressure &amp; visibility — updated live.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-num">02</div>
+        <div class="feature-text">
+          <div class="feature-title">5-Day Outlook</div>
+          <div class="feature-desc">A daily forecast so you can plan ahead, not just react.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-num">03</div>
+        <div class="feature-text">
+          <div class="feature-title">AI Email Summaries</div>
+          <div class="feature-desc">One click sends a friendly, human-written recap to your inbox.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if weather %}
+  <div class="location-row">Currently in <span>{{ weather.city }}, {{ weather.country }}</span></div>
+
+  <div class="hero-temp">
+    <span class="num">{{ weather.temperature|round|int }}</span><span class="unit">°C</span>
+  </div>
+  <div class="hero-condition">{{ weather.description }}</div>
+  {% endif %}
+</section>
+
+{% if weather %}
+<section class="dashboard">
+  <div class="dashboard-label">Station Readout — Updated Just Now</div>
+  <div class="stat-grid">
+    <div class="stat">
+      <div class="stat-label">Feels Like</div>
+      <div class="stat-value">{{ weather.feels_like|round|int }}<span class="sub">°C</span></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Humidity</div>
+      <div class="stat-value">{{ weather.humidity }}<span class="sub">%</span></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Wind Speed</div>
+      <div class="stat-value">{{ weather.wind_speed }}<span class="sub">m/s</span></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Pressure</div>
+      <div class="stat-value">{{ weather.pressure }}<span class="sub">hPa</span></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Visibility</div>
+      <div class="stat-value">{{ weather.visibility }}<span class="sub">km</span></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Sunrise / Sunset</div>
+      <div class="stat-value" style="font-size: 20px;">{{ weather.sunrise }}<span class="sub">/ {{ weather.sunset }}</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="email-section">
+  <form method="POST" action="{{ url_for('send_summary') }}" class="email-form">
+    <input type="email" name="email" placeholder="Enter your email..." required>
+    <button type="submit">Email Me This Summary</button>
+  </form>
+  {% if email_sent %}
+    <p class="success-msg">✓ Summary sent! Check your inbox.</p>
+  {% endif %}
+</section>
+{% endif %}
+
+{% if forecast %}
+<section class="forecast">
+  <div class="dashboard-label">5-Day Forecast</div>
+  <div class="forecast-grid">
+    {% for day in forecast %}
+    <div class="forecast-card">
+      <div class="forecast-day">{{ day.day }}</div>
+      <img src="https://openweathermap.org/img/wn/{{ day.icon }}@2x.png" alt="{{ day.description }}" class="forecast-icon">
+      <div class="forecast-temp">{{ day.temp }}°C</div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+</div>
+
+<footer>Data sourced via OpenWeather &nbsp;·&nbsp; Built with Flask</footer>
+
+<script>
+  function tick() {
+    document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-GB');
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  document.querySelector('form.search').addEventListener('submit', function() {
+    const btn = this.querySelector('button');
+    btn.textContent = 'Loading...';
+    btn.disabled = true;
+  });
+</script>
+
+</body>
+</html>

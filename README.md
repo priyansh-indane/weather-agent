@@ -69,13 +69,6 @@ Visit `http://127.0.0.1:5000`.
 2. Click "Email Me This Summary" → weather data is handed to a CrewAI agent
 3. The agent (powered by an OpenAI LLM) writes a short summary and autonomously calls its email tool to send it
 
-## Roadmap
-
-- [ ] WhatsApp delivery via Twilio
-- [ ] Persistent search history (SQLite)
-- [ ] "Use my location" via geolocation
-- [ ] Deploy live (Render / PythonAnywhere)
-
 ## License
 
 Open for personal and educational use.

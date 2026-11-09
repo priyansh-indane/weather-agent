@@ -1,9 +1,10 @@
+#importing libraries 
 import smtplib
 import os
 from email.mime.text import MIMEText
 from crewai.tools import BaseTool
 
-
+# email tool
 class SendEmailTool(BaseTool):
     name: str = "send_email"
     description: str = (
